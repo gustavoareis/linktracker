@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import pytz
 from user_agents import parse
-from funcs.funcs import get_lat_long, get_link, get_request_infos
+
 import os
 
 app = Flask(__name__)
@@ -64,9 +64,15 @@ def home(codigo_unico):
     try:
         df = pd.read_csv('data/codigos_uuid.csv', sep=';', dtype=str)
         if codigo_unico in df['uuid'].values:
-            vars = get_request_infos.parse_user_agent()
-            nova_linha = get_request_infos.get_request_infos(vars, codigo_unico)
-            nova_linha.to_csv('data/cliques_detalhados.csv', mode='a', header=False, index=False)
+            # Aqui você pode adicionar lógica para registrar o clique, se desejar
+            # Exemplo: salvar informações mínimas do clique
+            import pandas as pd
+            from datetime import datetime
+            clique_info = pd.DataFrame([{
+                'codigo_unico': codigo_unico,
+                'data_hora': datetime.now().isoformat()
+            }])
+            clique_info.to_csv('data/cliques_detalhados.csv', mode='a', header=False, index=False)
             # envio de email removido
             url_destino = df[df['uuid'] == codigo_unico]['link'].iloc[0]
             if pd.isna(url_destino):
