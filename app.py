@@ -29,6 +29,18 @@ def proteger_rotas():
     if request.path not in rotas_publicas and not session.get('logged_in'):
         return redirect(url_for('login'))
 
+#Rota para exibir cliques detalhados
+@app.route('/cliques')
+def cliques_detalhados():
+    try:
+        df = pd.read_csv('data/cliques_detalhados.csv', dtype=str)
+        cliques = df.to_dict(orient='records')
+    except FileNotFoundError:
+        cliques = []
+    except pd.errors.EmptyDataError:
+        cliques = []
+    return render_template('cliques.html', cliques=cliques)
+
 #Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,13 +76,25 @@ def home(codigo_unico):
     try:
         df = pd.read_csv('data/codigos_uuid.csv', sep=';', dtype=str)
         if codigo_unico in df['uuid'].values:
-            # Aqui você pode adicionar lógica para registrar o clique, se desejar
-            # Exemplo: salvar informações mínimas do clique
+            # Coletar informações detalhadas do clique
+            from user_agents import parse as parse_ua
             import pandas as pd
             from datetime import datetime
+            user_agent_str = request.headers.get('User-Agent', '')
+            user_agent = parse_ua(user_agent_str)
+            ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+            navegador = user_agent.browser.family
+            plataforma = user_agent.device.family
+            os_info = user_agent.os.family
+            referer = request.headers.get('Referer', '')
             clique_info = pd.DataFrame([{
+                'data_hora': datetime.now().isoformat(),
+                'ip': ip,
+                'navegador': navegador,
+                'plataforma': plataforma,
                 'codigo_unico': codigo_unico,
-                'data_hora': datetime.now().isoformat()
+                'referer': referer,
+                'os': os_info
             }])
             clique_info.to_csv('data/cliques_detalhados.csv', mode='a', header=False, index=False)
             # envio de email removido
