@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime
 import pytz
 from user_agents import parse
-
 import os
 
 app = Flask(__name__)
