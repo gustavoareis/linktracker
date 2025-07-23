@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Cliques Detalhados</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cliques.css') }}">
 </head>
+
 <body>
     <div class="container mt-4">
         <h2>Cliques Detalhados</h2>
@@ -39,5 +42,9 @@
         <div class="alert alert-info">Nenhum clique registrado ainda.</div>
         {% endif %}
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='cliques.js') }}"></script>
 </body>
+
 </html>
