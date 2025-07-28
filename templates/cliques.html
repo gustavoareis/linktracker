@@ -1,50 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cliques Detalhados</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='cliques.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .container { max-width: 1200px; }
+        .table-responsive { max-height: 80vh; overflow-y: auto; }
+    </style>
 </head>
-
 <body>
-    <div class="container mt-4">
-        <h2>Cliques Detalhados</h2>
-        <a href="/" class="btn btn-secondary mb-3">Voltar</a>
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Data/Hora</th>
-                    <th>IP</th>
-                    <th>Navegador</th>
-                    <th>Plataforma</th>
-                    <th>Código Único</th>
-                    <th>Referer</th>
-                    <th>OS</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in cliques %}
-                <tr>
-                    <td>{{ row['data_hora'] }}</td>
-                    <td>{{ row['ip'] }}</td>
-                    <td>{{ row['navegador'] }}</td>
-                    <td>{{ row['plataforma'] }}</td>
-                    <td>{{ row['codigo_unico'] }}</td>
-                    <td>{{ row['referer'] }}</td>
-                    <td>{{ row['os'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% if not cliques %}
-        <div class="alert alert-info">Nenhum clique registrado ainda.</div>
+    <div class="container">
+        <h1 class="mb-4">Cliques Detalhados</h1>
+        <p><a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar para o Início</a></p>
+
+        {% if cliques %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>IP</th>
+                            <th>Navegador</th>
+                            <th>Plataforma</th>
+                            <th>SO</th>
+                            <th>Campanha</th>
+                            <th>Código</th>
+                            <th>Link Original</th>
+                            <th>Referer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clique in cliques %}
+                            <tr>
+                                <td>{{ clique.data_hora }}</td>
+                                <td>{{ clique.ip }}</td>
+                                <td>{{ clique.navegador }}</td>
+                                <td>{{ clique.plataforma }}</td>
+                                <td>{{ clique.os }}</td>
+                                <td>{{ clique.campanha }}</td>
+                                <td>{{ clique.codigo }}</td>
+                                <td><a href="{{ clique.link_original }}" target="_blank">{{ clique.link_original }}</a></td>
+                                <td>{{ clique.referer }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Nenhum clique registrado ainda.
+            </div>
         {% endif %}
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='cliques.js') }}"></script>
 </body>
-
 </html>
